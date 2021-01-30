@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bus Ticket</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap"
@@ -63,19 +67,21 @@
                 <div class="input-group f-class">
                 <div>
                     <label for="">First Class ($150)</label>
-                    <input class="inp-style inp-width" type="number" name="">
+                    <input id="firstClassTicket-count" class="inp-style inp-width" type="number" name="" value="0">
                 </div>
                 <div class="plus-minus-btn">
-                    <p>+ -</p>
+                    <button onclick="handleTicketChange('firstClassTicket', false);" class="btn btn-danger"><i class="fas fa-minus"></i></button>
+                    <button onclick="handleTicketChange('firstClassTicket', true);" class="btn btn-success"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
                 <div class="input-group f-class">
                     <div>
                         <label for="">Economy ($100)</label>
-                        <input class="inp-style inp-width" type="number" name="">
+                        <input id="economyTicket-count" class="inp-style inp-width" type="number" name="" value="0">
                     </div>
                     <div class="plus-minus-btn">
-                        <p> <span>+</span> <span>-</span> </p>
+                        <button onclick="handleTicketChange('economyTicket', false);" class="btn btn-danger"><i class="fas fa-minus"></i></button>
+                        <button onclick="handleTicketChange('economyTicket', true);" class="btn btn-success"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
 
@@ -86,7 +92,7 @@
                         <p>Subtotal</p>
                     </div>
                     <div class="right">
-                        <p>$500</p>
+                        <p id="total-price">$00</p>
                     </div>
                 </div>
 
@@ -95,7 +101,7 @@
                         <p>Charge 10% VAT</p>
                     </div>
                     <div class="right">
-                        <p>$50</p>
+                        <p id="tax-amount">$50</p>
                     </div>
                 </div>
                 <hr>
@@ -104,7 +110,7 @@
                         <h4>Total</h4>
                     </div>
                     <div class="right">
-                        <p>$550</p>
+                        <p id="grand-total" >$50</p>
                     </div>
                 </div>
             </div>
@@ -113,6 +119,51 @@
     </main>
 
     <!--Thank You-->
+    <script>
+        function getInputValue(ticket) {
+                // console.log(product);
+                const ticketInput = document.getElementById(ticket + '-count');
+                const ticketCount = parseInt(ticketInput.value);
+                return ticketCount;
+            }
+
+        function handleTicketChange(ticket, isIncrease) {
+            const ticketCount = getInputValue(ticket);
+            
+            let ticketNewCount = ticketCount;
+            if(isIncrease == true){
+                ticketNewCount = ticketCount + 1;
+            }
+            if(isIncrease == false && ticketCount > 0) {
+                ticketNewCount = ticketCount - 1;
+            }
+            document.getElementById(ticket + '-count').value = ticketNewCount;
+        
+            let ticketTotal = 0;
+            if(ticket == 'firstClassTicket'){
+                ticketTotal = ticketNewCount * 150;
+            }
+            if(ticket == 'economyTicket'){
+                ticketTotal = ticketNewCount * 100;
+            }
+            calculateTotal();          
+        }
+
+            //  calculate total
+            function calculateTotal() {
+                const firstClassTicketCount = getInputValue('firstClassTicket');
+                const economyTicketCount = getInputValue('economyTicket');
+
+                const totalPrice = firstClassTicketCount * 150 + economyTicketCount * 100;
+                document.getElementById('total-price').innerText = '$' + totalPrice;
+
+                const tax = Math.round(totalPrice * 0.1);
+                document.getElementById('tax-amount').innerText = '$' + tax;
+
+                const grandTotal = totalPrice + tax;
+                document.getElementById('grand-total').innerText = '$' + grandTotal;
+            }
+    </script>
 </body>
 
 </html>
